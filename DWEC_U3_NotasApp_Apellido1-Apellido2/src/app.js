@@ -51,14 +51,16 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnPanelDiario").addEventListener("click", abrirPanelDiario);
   document.getElementById("btnPantallaCompleta").addEventListener("click", togglePantallaCompleta);
   //Botones importar/ exportar:
+  document.getElementById("btnExportar").addEventListener("click", exportarNotas);
   const inputImportar = document.getElementById("inputImportar");
   document.getElementById("btnImportar").addEventListener("click", () => inputImportar.click());
   inputImportar.addEventListener("change", (e) => {
   const archivo = e.target.files[0];
-    if(archivo){
-      importarNotas(archivo);
-    }
-  })
+  if (archivo) {
+    importarNotas(archivo);
+    e.target.value = "";
+  }
+});
   render();
 });
 
