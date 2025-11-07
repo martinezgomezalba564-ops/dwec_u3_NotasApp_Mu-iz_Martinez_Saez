@@ -54,6 +54,15 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("formNota").addEventListener("submit", onSubmitNota);
   document.getElementById("btnPanelDiario").addEventListener("click", abrirPanelDiario);
   document.getElementById("btnPantallaCompleta").addEventListener("click", togglePantallaCompleta);
+  //Botones importar/ exportar:
+  const btnImportar = document.getElementById("btnImportar");
+  document.getElementById("btnImportar").addEventListener("click" , () => btnImportar.click());
+  btnImportar.addEventListener("change", (e) => {
+    const archivo = e.target.files[0];
+    if(archivo){
+      importarNotas(archivo);
+    }
+  })
   render();
 });
 
@@ -246,7 +255,37 @@ function exportarNotas(){
       filtro:estado.filtro
     };
     const binario = new Blob([JSON.stringify(datos, null, 2)]);
+    const url = URL.createObjectURL(binario);
+    const link = document.createElement("link");
+    link.href = url;
+    link.downland = "tablon_notas.json";
+    link.click();
+    URL.removeObjectURL(url);
+    alert("Se han exportado los datos correctamente");
     
+    }catch(err){
+    console.error("error: ", err);
+    alert("No se han podido exportar los datos correctamente.");
     }
   }
+function importarNotas(archivo){
+  const leer = new FileReader();
+  reader.onload = (e) => {
+    try{
+      const datos = JSON.parse(e.target.result);
+      if(!Array.isArray(satos.notas))throw new Error ("El formato escogido es inválido.");
+      estado.notas=datos.notas;
+      if(typeof datos.filtro === "string"){
+        estado.filtro = datos.filtro;
+        guardarEstado();
+        render();
+        alert("Se han importado las notas.")
+      }
+    }catch(err){
+      console.error("Error: ", err);
+      alert("Este archivo no es válido.");
+    }
+  };
+  reader.readAsText(archivo);
+}
 }  
