@@ -176,4 +176,14 @@ function togglePantallaCompleta() {
 
 // === RF 10 ===
 function exportarNotas(){
-  
+  try{
+    const datos = {
+      timestamo: new Date().toISOString(),
+      notas: estado.notas,
+      filtro:estado.filtro
+    };
+    const binario = new Blob([JSON.stringify(datos, null, 2)]);
+    
+    }
+  }
+}  
