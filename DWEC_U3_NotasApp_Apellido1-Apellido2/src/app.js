@@ -151,6 +151,11 @@ function formatearFecha(ymd) {
   return new Intl.DateTimeFormat(navigator.language || "es-ES", { dateStyle: "medium" }).format(d);
 }
 
+/**
+ * Manejador del envío del formulario para crear una nueva nota.
+ * @param {SubmitEvent} e - Evento del formulario.
+ * @returns {void}
+ */
 function onSubmitNota(e) {
   e.preventDefault();
   const texto = document.getElementById("txtTexto").value;
@@ -166,6 +171,11 @@ function onSubmitNota(e) {
   } catch (err) { alert(err.message); }
 }
 
+/**
+ * Gestiona las acciones sobre las notas (borrar o completar).
+ * @param {MouseEvent} e - Evento del botón pulsado.
+ * @returns {void}
+ */
 function onAccionNota(e) {
   const btn = e.currentTarget;
   const id = btn.getAttribute("data-id");
@@ -181,6 +191,10 @@ function onAccionNota(e) {
   render();
 }
 
+/**
+ * Abre el panel diario en una nueva ventana y envía las notas filtradas.
+ * @returns {void}
+ */
 function abrirPanelDiario() {
   const ref = window.open("panel.html", "PanelDiario", "width=420,height=560");
   if (!ref) { alert("Pop-up bloqueado. Permita ventanas emergentes."); return; }
@@ -199,11 +213,20 @@ window.addEventListener("message", (ev) => {
   }
 });
 
+/**
+ * Escapa caracteres HTML peligrosos en una cadena.
+ * @param {string} s - Texto potencialmente inseguro.
+ * @returns {string} Texto con caracteres HTML escapados.
+ */
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[c]));
 }
 
 // === Control de pantalla completa (RF6) ===
+/**
+ * Activa o desactiva el modo de pantalla completa.
+ * @returns {void}
+ */
 function togglePantallaCompleta() {
   if (document.fullscreenElement) {
     document.exitFullscreen();
