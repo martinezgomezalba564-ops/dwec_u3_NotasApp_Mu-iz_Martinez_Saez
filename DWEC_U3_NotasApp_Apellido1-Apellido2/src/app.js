@@ -250,7 +250,7 @@ function togglePantallaCompleta() {
 function exportarNotas(){
   try{
     const datos = {
-      timestamo: new Date().toISOString(),
+      timestamp: new Date().toISOString(),
       notas: estado.notas,
       filtro:estado.filtro
     };
@@ -258,9 +258,9 @@ function exportarNotas(){
     const url = URL.createObjectURL(binario);
     const link = document.createElement("link");
     link.href = url;
-    link.downland = "tablon_notas.json";
+    link.download = "tablon_notas.json";
     link.click();
-    URL.removeObjectURL(url);
+    URL.remokeObjectURL(url);
     alert("Se han exportado los datos correctamente");
     
     }catch(err){
@@ -270,10 +270,10 @@ function exportarNotas(){
   }
 function importarNotas(archivo){
   const leer = new FileReader();
-  reader.onload = (e) => {
+  leer.onload = (e) => {
     try{
       const datos = JSON.parse(e.target.result);
-      if(!Array.isArray(satos.notas))throw new Error ("El formato escogido es inválido.");
+      if(!Array.isArray(datos.notas))throw new Error ("El formato escogido es inválido.");
       estado.notas=datos.notas;
       if(typeof datos.filtro === "string"){
         estado.filtro = datos.filtro;
@@ -286,6 +286,6 @@ function importarNotas(archivo){
       alert("Este archivo no es válido.");
     }
   };
-  reader.readAsText(archivo);
+  leer.readAsText(archivo);
 }
-}  
+
