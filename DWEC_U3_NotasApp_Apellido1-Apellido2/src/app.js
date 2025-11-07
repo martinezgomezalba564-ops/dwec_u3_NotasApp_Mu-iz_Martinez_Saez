@@ -1,8 +1,6 @@
 // DWEC U3 — Plantilla mínima NotasApp
 
 /** @typedef {{ id:string, texto:string, fecha:string, prioridad:number, completada?:boolean }} Nota */
-
-
 const estado = {
   notas: /** @type {Nota[]} */ ([]),
   filtro: obtenerFiltroDesdeHash()
@@ -275,20 +273,28 @@ function togglePantallaCompleta() {
 }
 
 // === RF 10 ===
+/**
+* Exportar notas en un archivo JSON para descargarlas
+* @returns {void} Indica mediante un alert al ususario de su exportación o errores.
+*/
 function exportarNotas(){
   try{
     const datos = {
+      //fecha de la exportación.
       timestamp: new Date().toISOString(),
+      //lista de las notas.
       notas: estado.notas,
       filtro:estado.filtro
     };
-    const binario = new Blob([JSON.stringify(datos, null, 2)]);
+    const binario = new Blob([JSON.stringify(datos)]); //hacer conversión a JSON.
+    //Crear objeto binario: (https://developer.mozilla.org/en-US/docs/Web/API/Blob).
     const url = URL.createObjectURL(binario);
     const a = document.createElement("a");
     a.href = url;
     a.download = "tablon_notas.json";
+    //forzar descarga:
     a.click();
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(url);//(revoke(permissionDescriptor))
     alert("Se han exportado los datos correctamente");
     
     }catch(err){
@@ -296,16 +302,25 @@ function exportarNotas(){
     alert("No se han podido exportar los datos correctamente.");
     }
   }
+
+/**
+* Importar notas desde un archivo JSON.
+* @param {File} archivo que se selecciona.
+* @returns {void} Indica mediante un alert al ususario si el archivo no sirve.
+*/
 function importarNotas(archivo){
   const leer = new FileReader();
   leer.onload = (e) => {
     try{
+      //convertir a objeto
       const datos = JSON.parse(e.target.result);
+      //verificar su formato:
       if(!Array.isArray(datos.notas))throw new Error ("El formato escogido es inválido.");
       estado.notas=datos.notas;
       if(typeof datos.filtro === "string"){
         estado.filtro = datos.filtro; 
       }
+      //guardar estado en LS:
       guardarEstado();
         render();
         alert("Se han importado las notas.");
@@ -314,6 +329,7 @@ function importarNotas(archivo){
       alert("Este archivo no es válido.");
     }
   };
+  //leer como texto: (https://developer.mozilla.org/es/docs/Web/API/FileReader/readAsText) 
   leer.readAsText(archivo);
 }
 
