@@ -43,8 +43,6 @@ function cargarEstado() {
   }
 }
 
-
-
 document.addEventListener("DOMContentLoaded", () => {
   //
   cargarEstado();
@@ -237,7 +235,7 @@ window.addEventListener("message", (ev) => {
 
    // Si el tipo es SNAPSHOT y notas es un array, renderizamos esas notas en la app principal
   if(mensaje.tipo === "SNAPSHOT" && Array.isArray(mensaje.notas)) {
-    renderNotas(mensaje.notas);
+    render();
   }
 
 
