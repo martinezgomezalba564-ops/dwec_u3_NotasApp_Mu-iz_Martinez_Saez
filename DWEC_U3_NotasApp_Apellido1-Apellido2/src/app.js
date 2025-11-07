@@ -276,11 +276,11 @@ function importarNotas(archivo){
       if(!Array.isArray(datos.notas))throw new Error ("El formato escogido es inválido.");
       estado.notas=datos.notas;
       if(typeof datos.filtro === "string"){
-        estado.filtro = datos.filtro;
-        guardarEstado();
-        render();
-        alert("Se han importado las notas.")
+        estado.filtro = datos.filtro; 
       }
+      guardarEstado();
+        render();
+        alert("Se han importado las notas.");
     }catch(err){
       console.error("Error: ", err);
       alert("Este archivo no es válido.");
