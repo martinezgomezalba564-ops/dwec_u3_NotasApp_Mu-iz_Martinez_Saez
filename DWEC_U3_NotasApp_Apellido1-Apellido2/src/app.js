@@ -173,3 +173,6 @@ function togglePantallaCompleta() {
     console.log("Pantalla completa activada");
   }
 }
+
+// === RF 10 ===
+
