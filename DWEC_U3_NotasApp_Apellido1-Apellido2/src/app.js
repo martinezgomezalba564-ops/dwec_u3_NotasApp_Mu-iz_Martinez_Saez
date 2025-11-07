@@ -8,6 +8,10 @@ const estado = {
   filtro: obtenerFiltroDesdeHash()
 };
 //RF9-PERSISTENCIA DE DATOS:
+/**
+ * Guarda el estado actual de la aplicación en localStorage.
+ * @returns {void}
+ */
 function guardarEstado(){
 try {
   //creamos objeto:
@@ -21,6 +25,11 @@ try {
   }
 }
 
+/**
+ * Carga el estado almacenado desde localStorage.
+ * Si los datos son inválidos, se elimina el almacenamiento.
+ * @returns {void}
+ */
 function cargarEstado() {
   try {
     const raw = localStorage.getItem("tablon_estado");
@@ -53,6 +62,14 @@ window.addEventListener("hashchange", () => {
   render();
 });
 
+/**
+ * Crea una nueva nota validando los datos recibidos.
+ * @param {string} texto - Texto de la nota.
+ * @param {string} fecha - Fecha de la nota en formato YYYY-MM-DD.
+ * @param {number|string} prioridad - Nivel de prioridad (1–3).
+ * @returns {Nota} Objeto de nota creada.
+ * @throws {Error} Si los datos son inválidos.
+ */
 function crearNota(texto, fecha, prioridad) {
   const t = String(texto).trim();
   const p = Math.max(1, Math.min(3, Number(prioridad) || 1));
@@ -61,11 +78,20 @@ function crearNota(texto, fecha, prioridad) {
   return { id: "n" + Math.random().toString(36).slice(2), texto: t, fecha: f.toISOString().slice(0,10), prioridad: p };
 }
 
+/**
+ * Obtiene el filtro activo a partir del hash de la URL.
+ * @returns {string} Hash correspondiente al filtro actual.
+ */
 function obtenerFiltroDesdeHash() {
   const h = (location.hash || "#todas").toLowerCase();
   return ["#hoy","#semana","#todas"].includes(h) ? h : "#todas";
 }
 
+/**
+ * Filtra las notas según el filtro seleccionado (#hoy, #semana o #todas).
+ * @param {Nota[]} notas - Lista de notas a filtrar.
+ * @returns {Nota[]} Notas filtradas.
+ */
 function filtrarNotas(notas) {
   const hoy = new Date(); const ymd = hoy.toISOString().slice(0,10);
   if (estado.filtro === "#hoy") return notas.filter(n => n.fecha === ymd);
@@ -76,6 +102,11 @@ function filtrarNotas(notas) {
   return notas;
 }
 
+/**
+ * Ordena las notas por prioridad, fecha y texto.
+ * @param {Nota[]} notas - Array de notas a ordenar.
+ * @returns {Nota[]} Notas ordenadas.
+ */
 function ordenarNotas(notas) {
   return [...notas].sort((a,b) =>
     b.prioridad - a.prioridad ||
@@ -84,6 +115,10 @@ function ordenarNotas(notas) {
   );
 }
 
+/**
+ * Renderiza las notas visibles en el contenedor principal.
+ * @returns {void}
+ */
 function render() {
   const cont = document.getElementById("listaNotas");
   cont.innerHTML = "";
@@ -106,6 +141,11 @@ function render() {
   cont.querySelectorAll("button[data-acc]").forEach(btn => btn.addEventListener("click", onAccionNota));
 }
 
+/**
+ * Formatea una fecha ISO a formato legible localmente.
+ * @param {string} ymd - Fecha en formato YYYY-MM-DD.
+ * @returns {string} Fecha formateada según el idioma del navegador.
+ */
 function formatearFecha(ymd) {
   const d = new Date(ymd);
   return new Intl.DateTimeFormat(navigator.language || "es-ES", { dateStyle: "medium" }).format(d);
