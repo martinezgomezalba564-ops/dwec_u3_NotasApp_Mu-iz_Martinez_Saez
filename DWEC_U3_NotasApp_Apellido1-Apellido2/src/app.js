@@ -175,4 +175,5 @@ function togglePantallaCompleta() {
 }
 
 // === RF 10 ===
-
+function exportarNotas(){
+  
