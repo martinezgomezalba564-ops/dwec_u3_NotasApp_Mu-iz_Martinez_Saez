@@ -56,9 +56,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnPantallaCompleta").addEventListener("click", togglePantallaCompleta);
   //Botones importar/ exportar:
   const inputImportar = document.getElementById("inputImportar");
-  document.getElementById("btnImportar").addEventListener("click" , () => btnImportar.click());
-  btnImportar.addEventListener("change", (e) => {
-    const archivo = e.target.files[0];
+  document.getElementById("btnImportar").addEventListener("click", () => inputImportar.click());
+  inputImportar.addEventListener("change", (e) => {
+  const archivo = e.target.files[0];
     if(archivo){
       importarNotas(archivo);
     }
