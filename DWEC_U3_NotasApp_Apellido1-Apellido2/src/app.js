@@ -256,11 +256,11 @@ function exportarNotas(){
     };
     const binario = new Blob([JSON.stringify(datos, null, 2)]);
     const url = URL.createObjectURL(binario);
-    const link = document.createElement("link");
-    link.href = url;
-    link.download = "tablon_notas.json";
-    link.click();
-    URL.remokeObjectURL(url);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "tablon_notas.json";
+    a.click();
+    URL.revokeObjectURL(url);
     alert("Se han exportado los datos correctamente");
     
     }catch(err){
