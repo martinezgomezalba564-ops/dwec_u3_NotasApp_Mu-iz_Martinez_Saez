@@ -5,7 +5,7 @@ const estado = {
   notas: /** @type {Nota[]} */ ([]),
   filtro: obtenerFiltroDesdeHash()
 };
-//RF9-PERSISTENCIA DE DATOS:
+//=== Persistencia de datos ===
 /**
  * Guarda el estado actual de la aplicación en localStorage.
  * @returns {void}
@@ -196,12 +196,12 @@ function onAccionNota(e) {
   render();
 }
 
+// === Controlar el panel ===
 /**
  * Abre el panel diario en una nueva ventana y envía las notas filtradas.
  * @returns {void}
  */
 
-//RF7
 //Intenta abrir una ventana nueva. Si el navegador bloquea el popup, avisa al usuario.
 function abrirPanelDiario() {
     //Abrir el panel desde la app principal
@@ -257,7 +257,7 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[c]));
 }
 
-// === Control de pantalla completa (RF6) ===
+// === Control de pantalla completa ===
 /**
  * Activa o desactiva el modo de pantalla completa.
  * @returns {void}
@@ -272,7 +272,7 @@ function togglePantallaCompleta() {
   }
 }
 
-// === RF 10 ===
+// === Gestión de la importación y exportación de archivos ===
 /**
 * Exportar notas en un archivo JSON para descargarlas
 * @returns {void} Indica mediante un alert al ususario de su exportación o errores.
