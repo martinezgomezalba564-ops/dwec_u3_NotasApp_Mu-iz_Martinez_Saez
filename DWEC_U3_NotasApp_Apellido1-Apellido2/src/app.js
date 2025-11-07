@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnPanelDiario").addEventListener("click", abrirPanelDiario);
   document.getElementById("btnPantallaCompleta").addEventListener("click", togglePantallaCompleta);
   //Botones importar/ exportar:
-  const btnImportar = document.getElementById("btnImportar");
+  const inputImportar = document.getElementById("inputImportar");
   document.getElementById("btnImportar").addEventListener("click" , () => btnImportar.click());
   btnImportar.addEventListener("change", (e) => {
     const archivo = e.target.files[0];
@@ -204,21 +204,51 @@ function onAccionNota(e) {
  * Abre el panel diario en una nueva ventana y envía las notas filtradas.
  * @returns {void}
  */
+
+//RF7
+//Intenta abrir una ventana nueva. Si el navegador bloquea el popup, avisa al usuario.
 function abrirPanelDiario() {
+    //Abrir el panel desde la app principal
   const ref = window.open("panel.html", "PanelDiario", "width=420,height=560");
-  if (!ref) { alert("Pop-up bloqueado. Permita ventanas emergentes."); return; }
+  // Si el navegador ha bloqueado el popup, window.open devuelve null o undefined
+  if (!ref) { alert("Pop-up bloqueado. Permita ventanas emergentes."); return; } // avisa al usuario y salimos de la función
+    
+  //Envia los datos al panel (snapshot de notas filtradas)
   const snapshot = { tipo: "SNAPSHOT", notas: filtrarNotas(estado.notas) };
-  setTimeout(() => { try { ref.postMessage(snapshot, "*"); } catch {} }, 400);
+  //setTimeout: espera un poco a que la ventana cargue antes de enviar
+// enviamos el objeto snapshot SOLO al mismo origen
+   // si algo falla, 
+  setTimeout(() => { try { ref.postMessage(snapshot, location.origin); } catch (err){
+    console.error("Error enviando snapshot:", err);
+  } }, 400);
 }
 
+//Escucha los mensajes desde el panel
 window.addEventListener("message", (ev) => {
-  if (!ev.data || typeof ev.data !== "object") return;
-  if (ev.data.tipo === "BORRADO") {
-    const id = ev.data.id;
+   //Validar origen
+   if (ev.origin !== location.origin) return; // ignora mensajes de otros sitios
+   
+   // Validar que el contenido del mensaje exista y sea un objeto
+   if (!ev.data || typeof ev.data !== "object") return;
+
+// Guardamos el contenido del mensaje en la variable "mensaje" para trabajar con él
+   const mensaje = ev.data;
+   if(!mensaje.tipo) return; // si el objeto no tiene 'tipo', lo ignoramos (no es un mensaje válido)
+
+   // Si el tipo es SNAPSHOT y notas es un array, renderizamos esas notas en la app principal
+  if(mensaje.tipo === "SNAPSHOT" && Array.isArray(mensaje.notas)) {
+    renderNotas(mensaje.notas);
+  }
+
+
+  //// Si el tipo es BORRADO, intentamos borrar la nota con el id recibido
+  if (mensaje.tipo === "BORRADO") {
+    const id = mensaje.id;
+    if(id=== undefined) return; // si no hay id, no hacemos nada
+    // Filtramos las notas para quitar la que tenga el id recibido
     estado.notas = estado.notas.filter(n => n.id !== id)
-    //
-    guardarEstado();
-    render();
+    guardarEstado(); // guardar los cambios en el almacenamiento
+    render(); //Renderiza
   }
 });
 
